@@ -1,10 +1,8 @@
-//
 //  main.c
 //  Lab7.1
-//
-//  Created by YITONG on 2017-03-20.
+//  Created by Yitong on 2017-03-20.
 //  Copyright © 2017 yitong. All rights reserved.
-//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -30,7 +28,7 @@ int main(void)
     char comPlays;
     char userPlays = 'B';
     bool comFirst = false;
-    
+
     printf("Enter the board dimension: ");
     scanf("%d", &dimension);
     printf("Computer plays (B/W) : ");
@@ -54,7 +52,7 @@ int main(void)
     
     if (comPlays == 'B')
         comFirst = true;
-    
+        
     do
     {
         if((availableMoves(board, dimension, userPlays) == false) && (availableMoves(board, dimension, comPlays) == false))
@@ -82,7 +80,7 @@ int main(void)
             
             return 0;
         }
-        
+
         if (comFirst)
         {
             userPlays = 'W';
@@ -151,7 +149,7 @@ int main(void)
         }
         else
             printf("%c player has no valid move.\n", userPlays);
-        
+
         
         
         if (!comFirst)
@@ -181,8 +179,8 @@ int main(void)
         }
         
     }while(true);
-    
-    
+
+
     return 0;
 }
 
@@ -273,12 +271,12 @@ void flipTile(char board[][26], int deltaRow, int deltaCol, char colour, char us
     int row = (userRow - 'a') + deltaRow;
     int col = (userCol - 'a') + deltaCol;
     
-    while(board[row][col] != colour && board[row][col] != 'U')
-    {
-        board[row][col] = colour;
-        row = row + deltaRow;
-        col = col + deltaCol;
-    }
+        while(board[row][col] != colour && board[row][col] != 'U')
+        {
+            board[row][col] = colour;
+            row = row + deltaRow;
+            col = col + deltaCol;
+        }
 }
 //the end of the flipTile Function
 /*------------------------------------------------------------------------------------------------------*/
@@ -309,6 +307,8 @@ void comMoves(char board[][26], int dimension, char comPlays, char *cRow, char *
             if(highest < score)
             {
                 highest = score;
+                //FIXME
+                printf("highest: %d\n", highest);
                 *cRow = ('a' + row);
                 *cCol = ('a' + col);
             }
