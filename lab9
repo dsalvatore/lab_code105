@@ -1,0 +1,190 @@
+// APS105-F15 Lab 9 Lab9.c
+//
+// This is a program written to maintain a personal music library,
+// using a linked list to hold the songs in the library.
+//
+// Author: Yitong
+// Student Number: 1003054133
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdbool.h>
+
+
+#define MAX_LENGTH 1024
+#define MAX_LIBRARY_SIZE 100
+
+typedef struct song
+{
+    char songName[MAX_LENGTH];
+    char artist[MAX_LENGTH];
+} Song;
+
+//Declarations of functions needed
+void cocktailSort(Song Library[], int size);
+void getStringFromUserInput(char s[], int arraySize);
+void printMusicLibraryEmpty(void);
+void printMusicLibraryTitle(void);
+void printList(Song Library[], int numSong);
+
+int main(void)
+{
+    Song Library[MAX_LIBRARY_SIZE];
+    int numSong = 0;
+    
+    // Announce the start of the program
+    printf("%s", "Personal Music Library.\n\n");
+    printf("%s", "Commands are I (insert), S (sort by artist),\n"
+           "P (print), Q (quit).\n");
+    
+    char response;
+    char input[MAX_LENGTH + 1];
+    char song[MAX_LENGTH + 1];
+    char artist[MAX_LENGTH + 1];
+    do
+    {
+        printf("\nCommand?: ");
+        getStringFromUserInput(input, MAX_LENGTH);
+        
+        // Response is the first character entered by user.
+        // Convert to uppercase to simplify later comparisons.
+        response = toupper(input[0]);
+        
+        if (response == 'I')
+        {
+            printf("Song name: ");
+            getStringFromUserInput(song, MAX_LENGTH);
+            printf("Artist: ");
+            getStringFromUserInput(artist, MAX_LENGTH);
+            
+            if (numSong < MAX_LIBRARY_SIZE - 1)
+            {
+                strcpy(Library[numSong].songName, song);
+                strcpy(Library[numSong].artist, artist);
+            }
+            
+            numSong++;
+        }
+        
+        else if (response == 'S')
+        {
+            // Sort the list of songs by artists.
+            
+            cocktailSort(Library, numSong);
+            printList(Library, numSong);
+        }
+        else if (response == 'P')
+        {
+            // Print the music library.
+            if (numSong == 0)
+            {
+                printMusicLibraryEmpty();
+            }
+            else
+            {
+                printMusicLibraryTitle();
+                printList(Library, numSong);
+            }
+            
+        }
+        else if (response == 'Q')
+        {
+            return 0;
+        }
+        
+        else
+        {
+            // do this if no command matched ...
+            printf("\nInvalid command.\n");
+        }
+    } while (response != 'Q');
+    
+    return 0;
+}
+
+
+
+// Support Function Definitions
+
+// Prompt the user for a string safely, without buffer overflow
+void getStringFromUserInput(char s[], int maxStrLength)
+{
+    int i = 0;
+    char c;
+    
+    while (i < maxStrLength && (c = getchar()) != '\n')
+        s[i++] = c;
+    
+    s[i] = '\0';
+}
+
+// Function to call when printing an empty music library.
+void printMusicLibraryEmpty(void)
+{
+    printf("\nThe music library is empty.\n");
+}
+
+// Function to call to print a title when the entire music library is printed.
+void printMusicLibraryTitle(void)
+{
+    printf("\nMy Personal Music Library: \n");
+}
+
+ //cocktailSort
+ void cocktailSort(Song Library[], int size)
+ {
+     //use for swap if necessary
+     Song temp;
+     bool swap = true;
+     
+     for (int top = size - 1; top > 0 && swap; top--)
+     {
+         swap = false;
+         
+         for (int right = 0; right < top; right ++)
+         {
+             if (strcmp(Library[right].artist, Library[right + 1].artist) > 0)
+             {
+                 temp = Library[right];
+                 Library[right] = Library[right + 1];
+                 Library[right + 1] = temp;
+                 
+                 swap = true;
+             }
+             
+             else if(strcmp(Library[right].artist, Library[right + 1].artist) == 0)
+             {
+                 if(strcmp(Library[right].songName, Library[right + 1].songName) > 0)
+                 {
+                     temp = Library[right];
+                     Library[right] = Library[right + 1];
+                     Library[right + 1] = temp;
+                 }
+             }
+         }
+         
+         for (int left = top; left > 0; left --)
+         {
+             if (strcmp(Library[left].artist, Library[left - 1].artist) < 0)
+             {
+                 temp = Library[left - 1];
+                 Library[left - 1] = Library[left];
+                 Library[left] = temp;
+                 
+                 swap = true;
+             }
+         }
+     }
+ }
+
+void printList(Song Library[], int numSong)
+{
+    for (int i = 0; i < numSong; i++)
+    {
+        printf("\n");
+        printf("%s\n", Library[i].songName);
+        printf("%s\n", Library[i].artist);
+    }
+}
